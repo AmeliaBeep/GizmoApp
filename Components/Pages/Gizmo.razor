@@ -1,0 +1,20 @@
+@page "/gizmo"
+@rendermode InteractiveServer
+
+<PageTitle>Gizmo</PageTitle>
+
+<h1>Gizmo</h1>
+<p>Current size: @currentSize px</p>
+<button style="background-color: orange; border: none; " class="btn btn-primary shadow-none" @onclick="IncrementGizmo">Make him bigger!</button>
+<br />
+<img src="images/gizmo.png" alt="Gizmo" style="width: @(currentSize)px; height: auto; padding: 20px 0px;" />
+
+
+@code {
+    private int currentSize = 200;
+
+    private void IncrementGizmo()
+    {
+        currentSize += 50;
+    }
+}
