@@ -1,20 +1,47 @@
 @page "/gizmo"
 @rendermode InteractiveServer
+@inject NavigationManager Navigation
 
 <PageTitle>Gizmo</PageTitle>
 
 <h1>Gizmo</h1>
-<p>Current size: @currentSize px</p>
-<button style="background-color: orange; border: none; " class="btn btn-primary shadow-none" @onclick="IncrementGizmo">Make him bigger!</button>
-<br />
-<img src="images/gizmo.png" alt="Gizmo" style="width: @(currentSize)px; height: auto; padding: 20px 0px;" />
+
+<button style="border: none; margin: 10px 0px;" class="btn btn-secondary shadow-none" @onclick="GetRandomOpinion">Get random opinion</button>
+@if (randomOpinion is not null)
+{
+    <br />
+    <button style="background-color: orange; border: none; " class="btn btn-primary shadow-none" @onclick="IncrementGizmo">Make him bigger!</button>
+    <button style="background-color: orange; border: none; " class="btn btn-primary shadow-none" @onclick="ResetGizmo">Reset size</button>
+    <br>
+    <img src="images/@GetOpinionImage(randomOpinion.Category)" alt="@randomOpinion.Category gizmo" style="width: @(currentSize)px; height: auto; padding: 20px 0px;" />
+    <p>@randomOpinion.Text</p>
+}
 
 
 @code {
     private int currentSize = 200;
+    private Opinion? randomOpinion;
 
     private void IncrementGizmo()
     {
         currentSize += 50;
     }
+    private void ResetGizmo()
+    {
+        currentSize = 200;
+    }
+
+    private async Task GetRandomOpinion()
+    {
+        using var client = new HttpClient { BaseAddress = new Uri(Navigation.BaseUri) };
+        randomOpinion = await client.GetFromJsonAsync<Opinion>("api/opinions/random");
+    }
+
+    private static string GetOpinionImage(OpinionCategory category) => category switch
+    {
+        OpinionCategory.Happy => "gizmo_happy.png",
+        OpinionCategory.Grumpy => "gizmo_grumpy.png",
+        OpinionCategory.Curious => "gizmo_curious.png",
+        _ => "gizmo_curious.png"
+    };
 }
