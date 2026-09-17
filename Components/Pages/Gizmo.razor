@@ -1,6 +1,7 @@
 @page "/gizmo"
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
+@inject HttpClient Http
 
 <PageTitle>Gizmo</PageTitle>
 
@@ -9,7 +10,7 @@
 <button style="border: none; margin: 10px 0px;" class="btn btn-secondary shadow-none" @onclick="GetRandomOpinion">Get random opinion</button>
 @if (randomOpinion is not null)
 {
-    <br />
+    <br>
     <button style="background-color: orange; border: none; " class="btn btn-primary shadow-none" @onclick="IncrementGizmo">Make him bigger!</button>
     <button style="background-color: orange; border: none; " class="btn btn-primary shadow-none" @onclick="ResetGizmo">Reset size</button>
     <br>
@@ -33,8 +34,8 @@
 
     private async Task GetRandomOpinion()
     {
-        using var client = new HttpClient { BaseAddress = new Uri(Navigation.BaseUri) };
-        randomOpinion = await client.GetFromJsonAsync<Opinion>("api/opinions/random");
+        randomOpinion = await Http.GetFromJsonAsync<Opinion>(
+            Navigation.ToAbsoluteUri("api/opinions/random"));
     }
 
     private static string GetOpinionImage(OpinionCategory category) => category switch

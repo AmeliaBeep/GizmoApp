@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -25,7 +26,7 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 
 // Create opinions
-    var opinions = new[]
+var opinions = new[]
     {
         new Opinion(Happy, "Head scratches approved"),
         new Opinion(Grumpy, "Do not pet the tail"),
