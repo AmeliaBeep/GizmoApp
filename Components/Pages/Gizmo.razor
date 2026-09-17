@@ -16,6 +16,14 @@
     <br>
     <img src="images/@GetOpinionImage(randomOpinion.Category)" alt="@randomOpinion.Category gizmo" style="width: @(currentSize)px; height: auto; padding: 20px 0px;" />
     <p>@randomOpinion.Text</p>
+} 
+else
+{
+    <br>
+    <button style="background-color: orange; border: none; " class="btn btn-primary shadow-none" @onclick="IncrementGizmo">Make him bigger!</button>
+    <button style="background-color: orange; border: none; " class="btn btn-primary shadow-none" @onclick="ResetGizmo">Reset size</button>
+    <br>
+    <img src="images/gizmo_happy.png" alt="Gizmo" style="width: @(currentSize)px; height: auto; padding: 20px 0px;" />
 }
 
 
