@@ -1,5 +1,6 @@
 using GizmoApp;
 using GizmoApp.Components;
+using static GizmoApp.OpinionCategory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,17 +23,22 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapGet("/api/opinions/random", () =>
-{
+
+// Create opinions
     var opinions = new[]
     {
-        new Opinion { Category = OpinionCategory.Happy, Text = "Head scracthes approved" },
-        new Opinion { Category = OpinionCategory.Grumpy, Text = "Do not pet the tail" },
-        new Opinion { Category = OpinionCategory.Curious, Text = "He thinks you smell funny" }
+        new Opinion(Happy, "Head scratches approved"),
+        new Opinion(Grumpy, "Do not pet the tail"),
+        new Opinion(Curious, "He thinks you smell funny"),
+        new Opinion(Happy, "Treats are welcome"),
+        new Opinion(Grumpy, "Stinky girl cats need to go away")
     };
 
+app.MapGet("/api/opinions/random", () =>
+{
     return Results.Ok(opinions[Random.Shared.Next(opinions.Length)]);
 });
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
