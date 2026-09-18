@@ -1,5 +1,7 @@
-using GizmoApp;
+using GizmoApp.Data;
+using GizmoApp.Services;
 using GizmoApp.Components;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddHttpClient();
-builder.Services.AddSingleton<IOpinionService, InMemoryOpinionService>();
+builder.Services.AddDbContext<GizmoDbContext>(options =>
+    options.UseSqlite(
+        builder.Configuration.GetConnectionString("GizmoDatabase")));
+builder.Services.AddScoped<IOpinionService, OpinionService>();
 
 var app = builder.Build();
 
@@ -24,10 +29,6 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapGet("/api/opinions/random", (IOpinionService opinionService) =>
-{
-    return Results.Ok(opinionService.GetRandomOpinion());
-});
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

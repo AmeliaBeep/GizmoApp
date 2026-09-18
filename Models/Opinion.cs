@@ -1,4 +1,4 @@
-namespace GizmoApp;
+namespace GizmoApp.Models;
 
 public enum OpinionCategory
 {
@@ -8,7 +8,7 @@ public enum OpinionCategory
 }
 public class Opinion
 {
-    
+    public int Id {get; private set; }
     public OpinionCategory Category { get; private set; }
     public string Text { get; private set; }
 
