@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddHttpClient();
+builder.Services.AddControllers();
 builder.Services.AddDbContext<GizmoDbContext>(options =>
     options.UseSqlite(
         builder.Configuration.GetConnectionString("GizmoDatabase")));
@@ -24,14 +25,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.MapGet("/api/opinions/random", async (IOpinionService opinionService) =>
-    Results.Ok(await opinionService.GetRandomOpinionAsync()));
-
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
-
 app.UseAntiforgery();
 
+app.MapControllers();
 app.MapStaticAssets();
 
 app.MapRazorComponents<App>()
