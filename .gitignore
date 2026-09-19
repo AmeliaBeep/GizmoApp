@@ -3,6 +3,5 @@ obj/
 .vs/
 *.user
 *.suo
-*.db
 *.db-shm
 *.db-wal
