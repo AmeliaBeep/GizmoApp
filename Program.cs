@@ -1,9 +1,18 @@
 using GizmoApp.Data;
 using GizmoApp.Services;
 using GizmoApp.Components;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var configuredConnectionString = builder.Configuration.GetConnectionString("GizmoDatabase")
+    ?? throw new InvalidOperationException("Connection string 'GizmoDatabase' is not configured.");
+var sqliteConnection = new SqliteConnectionStringBuilder(configuredConnectionString);
+if (!Path.IsPathRooted(sqliteConnection.DataSource))
+{
+    sqliteConnection.DataSource = Path.Combine(builder.Environment.ContentRootPath, sqliteConnection.DataSource);
+}
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -11,11 +20,16 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<GizmoDbContext>(options =>
-    options.UseSqlite(
-        builder.Configuration.GetConnectionString("GizmoDatabase")));
+    options.UseSqlite(sqliteConnection.ToString()));
 builder.Services.AddScoped<IOpinionService, OpinionService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<GizmoDbContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
