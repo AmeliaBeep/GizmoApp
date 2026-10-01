@@ -3,13 +3,14 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
-<h1>Gizmo Opinions</h1>
-
-<button class="btn opinion-button btn-secondary shadow-none" @onclick="GetRandomOpinion">Get random opinion</button>
-<br>
+<div class="container justify-content-center mx-auto text-center">
+    <div><h1>Gizmo Opinions</h1></div>
+    <div><button class="btn opinion-button btn-secondary shadow-none" @onclick="GetRandomOpinion">Get random opinion</button></div>
+    <div>
 <button class="btn gizmo-button shadow-none" @onclick="IncrementGizmo">Make him bigger!</button>
 <button class="btn gizmo-button shadow-none" @onclick="ResetGizmo">Reset size</button>
-<br>
+    </div>
+    <div>
 @if (randomOpinion is not null)
 {
     <img src="images/@FileName(randomOpinion.Category)" alt="@randomOpinion.Category gizmo" style="width: @(currentSize)px;" class="gizmo-image" />
@@ -19,7 +20,8 @@ else
 {
     <img src="images/gizmo_happy.png" alt="Gizmo" style="width: @(currentSize)px;" class="gizmo-image" />
 }
-
+    </div>
+</div>
 
 @code {
     private Opinion? randomOpinion;
