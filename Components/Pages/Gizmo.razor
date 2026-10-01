@@ -4,22 +4,28 @@
 @inject HttpClient Http
 
 <div class="container justify-content-center mx-auto text-center">
-    <div><h1>Gizmo Opinions</h1></div>
+    @if (timesIncremented < 5) {
+        <div><h1>Gizmo Opinions</h1></div>
+    }
+    else
+    {
+        <div><h1>You should probably stop</h1></div>
+    }
     <div><button class="btn opinion-button btn-secondary shadow-none" @onclick="GetRandomOpinion">Get random opinion</button></div>
     <div>
-<button class="btn gizmo-button shadow-none" @onclick="IncrementGizmo">Make him bigger!</button>
-<button class="btn gizmo-button shadow-none" @onclick="ResetGizmo">Reset size</button>
+        <button class="btn gizmo-button shadow-none" @onclick="IncrementGizmo">Make him bigger!</button>
+        <button class="btn gizmo-button shadow-none" @onclick="ResetGizmo">Reset size</button>
     </div>
     <div>
-@if (randomOpinion is not null)
-{
-    <img src="images/@FileName(randomOpinion.Category)" alt="@randomOpinion.Category gizmo" style="width: @(currentSize)px;" class="gizmo-image" />
-    <p>@randomOpinion.Text</p>
-} 
-else
-{
-    <img src="images/gizmo_happy.png" alt="Gizmo" style="width: @(currentSize)px;" class="gizmo-image" />
-}
+    @if (randomOpinion is not null)
+    {
+        <img src="images/@FileName(randomOpinion.Category)" alt="@randomOpinion.Category gizmo" style="width: @(currentSize)px;" class="gizmo-image" />
+        <p>@randomOpinion.Text</p>
+    } 
+    else
+    {
+        <img src="images/gizmo_happy.png" alt="Gizmo" style="width: @(currentSize)px;" class="gizmo-image" />
+    }
     </div>
 </div>
 
@@ -27,13 +33,16 @@ else
     private Opinion? randomOpinion;
     private const int initialSize = 200;
     private int currentSize = initialSize;
+    private int timesIncremented = 0;
     private void IncrementGizmo()
     {
         currentSize += 50;
+        timesIncremented++;
     }
     private void ResetGizmo()
     {
         currentSize = initialSize;
+        timesIncremented = 0;
     }
     private async Task GetRandomOpinion()
     {
